@@ -21,4 +21,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          branch: 'releases/${{ env.GITHUBAPP_CURRENT_VERSION }}'
+          branch: 'releases-${{ env.GITHUBAPP_CURRENT_VERSION }}'
