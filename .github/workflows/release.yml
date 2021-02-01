@@ -1,0 +1,24 @@
+on:
+  push:
+    branches:
+      - release_process
+
+name: "Cut a release candidate"
+
+jobs:
+  build_and_release:
+    name: "Build and upload"
+    runs-on: macOS-latest
+    env:
+      GLOBAL_APP_VERSION: sed -n 's/.GLOBAL_APP_VERSION://p' project.yml | xargs echo -n
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v2
+      - name: Get current version number
+        run: sed -n 's/.GLOBAL_APP_VERSION://p' project.yml | xargs echo -n % echo "GITHUBAPP_CURRENT_VERSION=%" >> $GITHUB_ENV
+      - name: Create a release branch
+        uses: peterjgrainger/action-create-branch@v2.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          branch: 'releases/${{ env.GITHUBAPP_CURRENT_VERSION }}'

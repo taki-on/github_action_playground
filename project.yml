@@ -1,0 +1,129 @@
+name: GitHub
+options:
+  bundleIdPrefix: com.github
+  usesTabs: false
+  indentWidth: 4
+  tabWidth: 4
+  xcodeVersion: 12.0
+  deploymentTarget:
+    iOS: 13.0
+  carthageExecutablePath: tmp/tools/carthage-0.36.1
+packages:
+  Alamofire:
+    url: https://github.com/Alamofire/Alamofire
+    exactVersion: 5.2.2
+  AlamofireNetworkActivityIndicator:
+    url: https://github.com/alamofire/AlamofireNetworkActivityIndicator
+    exactVersion: 3.1.0
+  Diff:
+    url: https://github.com/soffes/Diff
+    exactVersion: 0.2.5
+  Fuzi:
+    url: https://github.com/cezheng/Fuzi
+    exactVersion: 3.1.2
+  MarkdownKit:
+    url: https://github.com/soffes/MarkdownKit
+    exactVersion: 0.3.7
+  SnapKit:
+    url: https://github.com/SnapKit/SnapKit
+    exactVersion: 5.0.1
+  SnapshotTesting:
+    url: https://github.com/pointfreeco/swift-snapshot-testing
+    exactVersion: 1.8.1
+  Valet:
+    url: https://github.com/square/Valet
+    exactVersion: 4.1.1
+  Firebase:
+    url: https://github.com/firebase/firebase-ios-sdk.git
+    exactVersion: 7.1.0
+targetTemplates:
+  App:
+    type: application
+    platform: iOS
+    settings:
+      IPHONEOS_DEPLOYMENT_TARGET: 13.0
+  Framework:
+    type: framework
+    platform: iOS
+    settings:
+      IPHONEOS_DEPLOYMENT_TARGET: 13.0
+      INFOPLIST_FILE: $(SRCROOT)/Support/Framework-Info.plist
+      APPLICATION_EXTENSION_API_ONLY: true
+  UITest:
+    type: bundle.ui-testing
+    platform: iOS
+    settings:
+      INFOPLIST_FILE: $(SRCROOT)/Support/Test-Info.plist
+  UnitTest:
+    type: bundle.unit-test
+    platform: iOS
+    settings:
+      INFOPLIST_FILE: $(SRCROOT)/Support/Test-Info.plist
+  Widget:
+    type: app-extension
+    platform: iOS
+    settings:
+      base:
+        EXCLUDED_ARCHS[sdk=iphonesimulator*]: arm64
+        ONLY_ACTIVE_ARCH: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 14.0
+        INFOPLIST_FILE: $(SRCROOT)/Support/Widget-Info.plist
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_ENTITLEMENTS: $(SRCROOT)/Support/Widget.entitlements
+        DEVELOPMENT_TEAM: VEKTX9H2N7
+      configs:
+        debug:
+          OTHER_SWIFT_FLAGS: $(inherited) -DDEBUG
+          CODE_SIGN_IDENTITY: Apple Development
+          PRODUCT_BUNDLE_IDENTIFIER: com.github.stormbreaker.dev.widgets-${widgetIdentifier}
+        release:
+          CODE_SIGN_STYLE: Manual
+          CODE_SIGN_IDENTITY: Apple Distribution
+          PRODUCT_BUNDLE_IDENTIFIER: com.github.stormbreaker.prod.widgets-${widgetIdentifier}
+          PROVISIONING_PROFILE_SPECIFIER: match AppStore com.github.stormbreaker.prod.widgets-${widgetIdentifier}
+    postBuildScripts:
+      - name: Set Bundle Version
+        shell: /usr/bin/env ruby
+        path: Support/Scripts/set_bundle_version.rb
+        inputFiles:
+          - $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
+settings:
+  base:
+    GLOBAL_APP_VERSION: 1.4.2
+    SWIFT_VERSION: 5.3.0
+    CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED: YES
+    COPY_PHASE_STRIP: YES
+    CURRENT_PROJECT_VERSION: 1
+    DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+    ENABLE_NS_ASSERTIONS: YES
+    ENABLE_TESTABILITY: YES
+    GCC_OPTIMIZATION_LEVEL: 0
+    GCC_PREPROCESSOR_DEFINITIONS: $(inherited) FIREBASE_ANALYTICS_SUPPRESS_WARNING=1
+    MTL_ENABLE_DEBUG_INFO: INCLUDE_SOURCE
+    MTL_FAST_MATH: YES
+    SDKROOT: iphoneos
+    SWIFT_COMPILATION_MODE: singlefile
+    SWIFT_INSTALL_OBJC_HEADER: NO
+    TARGETED_DEVICE_FAMILY: "1,2"
+    VALIDATE_PRODUCT: NO
+    VALIDATE_WORKSPACE: NO
+    CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: YES
+  configs:
+    debug:
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG
+      DEBUG_INFORMATION_FORMAT: dwarf
+      COPY_PHASE_STRIP: NO
+    release:
+      CODE_SIGN_IDENTITY: iPhone Distribution
+      ENABLE_NS_ASSERTIONS: NO
+      ENABLE_TESTABILITY: NO
+      GCC_OPTIMIZATION_LEVEL: fast
+      MTL_ENABLE_DEBUG_INFO: NO
+      SWIFT_COMPILATION_MODE: wholemodule
+      VALIDATE_PRODUCT: YES
+      DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+      COPY_PHASE_STRIP: YES
+fileGroups:
+  - Modules
+  - Support
+# `includes` is automatically added by `rake project`
